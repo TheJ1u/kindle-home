@@ -72,44 +72,30 @@
   .stat-row { display: flex; gap: 46px; margin-top: 12px; }
   .stat small { display: block; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
 
-  /* ---------- SCREEN 3: FOCUS (night sky over mountains) ---------- */
-  /* Sky gradient: near-black at top, lifting to gray near the horizon so
-     the black mountains read as silhouettes even in pure black & white. */
-  .focus { justify-content: center; align-items: center; text-align: center;
-    padding: 40px 44px 180px; color: #fff;
-    background: linear-gradient(180deg, #000 0%, #050505 45%, #15151a 74%, #28282f 100%); }
-  /* Milky Way haze + soft glows */
-  .focus .fbg { position: absolute; inset: 0; z-index: 0; background:
-    radial-gradient(52% 34% at 72% 24%, rgba(255,255,255,0.13), rgba(255,255,255,0) 72%),
-    radial-gradient(38% 22% at 24% 18%, rgba(255,255,255,0.09), rgba(255,255,255,0) 72%),
-    linear-gradient(118deg, rgba(255,255,255,0) 41%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 59%); }
+  /* ---------- SCREEN 2: FOCUS (scripture over moon / pond) ---------- */
+  .focus { justify-content: flex-start; align-items: center; text-align: center;
+    padding: 185px 40px 40px; color: #fff;
+    background: radial-gradient(130% 100% at 50% 12%, #0e0e16 0%, #000 74%); }
+  .focus.pond { background: linear-gradient(180deg,#0a0a12 0%,#10101a 42%,#1b1b26 66%,#0c0c12 100%); }
   .focus .fstars { position: absolute; inset: 0; z-index: 1; }
   .focus .fstar { position: absolute; background: #fff; border-radius: 50%; }
   .focus .fstar.big { box-shadow: 0 0 6px 1px rgba(255,255,255,0.7); }
   @keyframes tw { 0%,100%{opacity:0.95} 50%{opacity:0.2} }
   .focus .fstar.tw { animation: tw 3.6s ease-in-out infinite; }
+  /* The moon (clean, no constellations). */
+  .focus .fmoon { position:absolute; top:6%; left:50%; margin-left:-60px; width:120px; height:120px; border-radius:50%; z-index:2;
+    background: radial-gradient(circle at 36% 34%, #fff 0%, #e2e2e2 46%, #9a9a9a 72%, #5f5f5f 100%);
+    box-shadow:0 0 50px 10px rgba(255,255,255,0.18); }
+  .focus .fmoon b { position:absolute; border-radius:50%; background:rgba(90,90,90,0.45); }
+  /* Pond + forest layer, shown only for Mosiah (the Waters of Mormon). */
+  .focus .pondlayer { position:absolute; inset:0; z-index:2; display:none; }
+  .focus.pond .pondlayer { display:block; }
+  .focus .pondlayer svg { position:absolute; inset:0; width:100%; height:100%; }
 
-  .focus .shoot { position: absolute; z-index: 2; height: 2px;
-    background: linear-gradient(90deg, rgba(255,255,255,0), #fff); opacity: 0; }
-  .focus .shoot:before { content:""; position:absolute; right:-3px; top:-2px; width:6px; height:6px;
-    background:#fff; border-radius:50%; box-shadow:0 0 9px 2px rgba(255,255,255,0.85); }
-  @keyframes shootA { 0%{opacity:0; transform:translate(0,0) rotate(20deg)} 6%{opacity:1} 90%{opacity:1}
-    100%{opacity:0; transform:translate(640px,233px) rotate(20deg)} }
-  @keyframes shootB { 0%{opacity:0; transform:translate(0,0) rotate(12deg)} 6%{opacity:1} 90%{opacity:1}
-    100%{opacity:0; transform:translate(560px,119px) rotate(12deg)} }
-  .focus .s1 { width:170px; top:12%; left:-14%; animation: shootA 12s linear 2s infinite; }
-  .focus .s2 { width:140px; top:28%; left:-14%; animation: shootB 15s linear 7s infinite; }
-  .focus .s3 { width:120px; top:6%;  left:30%;  animation: shootA 13s linear 13s infinite; }
-  .focus .s4 { width:150px; top:40%; left:-14%; animation: shootB 17s linear 20s infinite; }
-
-  /* Black mountain ridges along the bottom for depth. */
-  .focus .mtn { position: absolute; left:0; right:0; bottom:0; z-index: 2; width:100%; height: 170px; display:block; }
-
-  .focus .inner { position: relative; z-index: 3; max-width: 100%; }
-  .focus .mark { font-size: 100px; line-height: 0.4; }
-  .focus q { font-size: 36px; font-style: italic; line-height: 1.35; display: block; margin: 26px auto; quotes: none;
-    max-width: 440px; word-wrap: break-word; text-shadow: 0 1px 10px rgba(0,0,0,0.9); }
-  .focus .by { font-size: 18px; letter-spacing: 3px; text-transform: uppercase; opacity: 0.85; }
+  .focus .inner { position: relative; z-index: 5; max-width: 100%; }
+  .focus .ref { font-size: 17px; letter-spacing: 4px; text-transform: uppercase; opacity: 0.9; margin-bottom: 16px; }
+  .focus .fverse { font-size: 22px; font-style: italic; line-height: 1.5; max-width: 470px; margin: 0 auto;
+    word-wrap: break-word; text-shadow: 0 1px 10px rgba(0,0,0,0.95); }
 
   /* ---------- SCREEN 4: THE YEAR ---------- */
   .year-top { display: flex; justify-content: space-between; align-items: flex-end; }
@@ -155,20 +141,15 @@
     <div class="scrollcue" id="scrollcue" style="display:none">&#8964;&nbsp; more below</div>
   </section>
 
-  <!-- SCREEN 2: FOCUS (dark starfield + shooting stars) -->
-  <section class="screen focus" data-name="Focus">
-    <div class="fbg"></div>
+  <!-- SCREEN 2: FOCUS (scripture over moon / pond) -->
+  <section class="screen focus" data-name="Focus" id="focusScreen">
     <div class="fstars" id="fstars"></div>
-    <div class="shoot s1"></div><div class="shoot s2"></div><div class="shoot s3"></div><div class="shoot s4"></div>
+    <div class="fmoon"><b style="width:20px;height:20px;top:24px;left:34px"></b><b style="width:12px;height:12px;top:74px;left:70px"></b></div>
+    <div class="pondlayer"><svg id="pondSvg" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"></svg></div>
     <div class="inner">
-      <div class="mark">&ldquo;</div>
-      <q id="fquote">A reader lives a thousand lives before he dies.</q>
-      <div class="by" id="fby">Daily Focus</div>
+      <div class="ref" id="fref">Abraham 1:2</div>
+      <div class="fverse" id="fverse"></div>
     </div>
-    <svg class="mtn" viewBox="0 0 1000 170" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,170 L0,96 L120,120 L250,66 L360,104 L470,52 L600,110 L720,72 L850,116 L1000,80 L1000,170 Z" fill="#000" opacity="0.6"/>
-      <path d="M0,170 L0,128 L140,150 L300,98 L430,138 L560,92 L690,140 L820,108 L1000,146 L1000,170 Z" fill="#000"/>
-    </svg>
   </section>
 
   <!-- SCREEN 4: THE WEEK -->
@@ -196,17 +177,26 @@
   var DS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
   var M=["January","February","March","April","May","June","July","August","September","October","November","December"];
 
-  var quotes=[
-    ["A reader lives a thousand lives before he dies.","Daily Focus"],
-    ["So many books, so little time.","Daily Focus"],
-    ["Read 20 pages. That is the whole plan.","Daily Focus"],
-    ["You are what you repeatedly do.","Daily Focus"]
+  // Scriptures (verbatim from churchofjesuschrist.org). scene: "moon" or "pond".
+  var scriptures=[
+    ["Abraham 1:2","And, finding there was greater happiness and peace and rest for me, I sought for the blessings of the fathers, and the right whereunto I should be ordained to administer the same; having been myself a follower of righteousness, desiring also to be one who possessed great knowledge, and to be a greater follower of righteousness, and to possess a greater knowledge, and to be a father of many nations, a prince of peace, and desiring to receive instructions, and to keep the commandments of God, I became a rightful heir, a High Priest, holding the right belonging to the fathers.","moon"],
+    ["Ether 3:19","And because of the knowledge of this man he could not be kept from beholding within the veil; and he saw the finger of Jesus, which, when he saw, he fell with fear; for he knew that it was the finger of the Lord; and he had faith no longer, for he knew, nothing doubting.","moon"],
+    ["Alma 5:12","And according to his faith there was a mighty change wrought in his heart. Behold I say unto you that this is all true.","moon"],
+    ["Mosiah 18:30","And now it came to pass that all this was done in Mormon, yea, by the waters of Mormon, in the forest that was near the waters of Mormon; yea, the place of Mormon, the waters of Mormon, the forest of Mormon, how beautiful are they to the eyes of them who there came to the knowledge of their Redeemer.","pond"]
   ];
   var qi=0;
+  function showScripture(){
+    var s=scriptures[qi];
+    document.getElementById("fref").textContent=s[0];
+    document.getElementById("fverse").textContent=s[1];
+    document.getElementById("focusScreen").classList.toggle("pond", s[2]==="pond");
+    qi=(qi+1)%scriptures.length;
+  }
 
-  // --- localStorage helpers (per-device check-offs). Wrapped: Kindle may block it. ---
-  function loadLocal(){ try { return JSON.parse(localStorage.getItem("kindleTodoDone")||"{}"); } catch(e){ return {}; } }
-  function saveLocal(o){ try { localStorage.setItem("kindleTodoDone", JSON.stringify(o)); } catch(e){} }
+  // --- Per-day check-offs on this device. A new date = a fresh (all-unchecked) list each morning. ---
+  function todayKey(){ var d=new Date(); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+  function loadLocal(){ try { var o=JSON.parse(localStorage.getItem("kindleTodoDone")||"{}"); return (o.date===todayKey())?(o.done||{}):{}; } catch(e){ return {}; } }
+  function saveLocal(o){ try { localStorage.setItem("kindleTodoDone", JSON.stringify({date:todayKey(), done:o})); } catch(e){} }
   var localDone = loadLocal();
 
   // --- Load the to-do list from todo.txt (lines; "x " prefix = done in the file). ---
@@ -214,12 +204,12 @@
     var lines = text.split(/\r?\n/).map(function(s){return s.replace(/\s+$/,"");}).filter(function(s){return s.length;});
     var ul = document.getElementById("todoList");
     if (!lines.length){ ul.innerHTML = '<li class="td-empty">Nothing on the list. Add tasks in todo.txt.</li>'; return; }
+    localDone = loadLocal();   // refresh in case the day rolled over while the page stayed open
     var html = "";
     lines.forEach(function(line, idx){
-      var fileDone = /^x\s+/i.test(line);
       var label = line.replace(/^x\s+/i,"");
       var key = label.toLowerCase();
-      var done = fileDone || localDone[key] === true;
+      var done = localDone[key] === true;
       html += '<li class="todo'+(done?' done':'')+'" data-key="'+key.replace(/"/g,'&quot;')+'"><span>'+label.replace(/</g,'&lt;')+'</span></li>';
     });
     ul.innerHTML = html;
@@ -281,6 +271,20 @@
       h+='<div class="day'+(t?' today':'')+'"><div class="dn">'+DS[day.getDay()]+'</div><div class="dd">'+day.getDate()+'</div></div>'; }
     w.innerHTML=h;
   }
+  function buildPond(){
+    var svg=document.getElementById("pondSvg"); if(!svg) return;
+    function trees(baseY,h1,h2,step,w,op){ var x=-20,out=""; while(x<620){ var h=h1+Math.random()*(h2-h1); var hw=w*(0.6+Math.random()*0.5);
+      out+='<path d="M'+x+','+baseY+' L'+(x+hw)+','+(baseY-h)+' L'+(x+hw*2)+','+baseY+' Z" fill="#000" fill-opacity="'+op+'"/>'; x+=step*(0.7+Math.random()*0.6); } return out; }
+    var s='';
+    s+='<ellipse cx="300" cy="672" rx="188" ry="50" fill="#ffffff" fill-opacity="0.10"/>';
+    s+='<ellipse cx="300" cy="672" rx="188" ry="50" fill="none" stroke="#fff" stroke-opacity="0.18" stroke-width="1"/>';
+    s+='<ellipse cx="300" cy="670" rx="24" ry="6" fill="#fff" fill-opacity="0.35"/>';
+    s+='<line x1="155" y1="658" x2="445" y2="658" stroke="#fff" stroke-opacity="0.10" stroke-width="1"/>';
+    s+='<line x1="180" y1="684" x2="420" y2="684" stroke="#fff" stroke-opacity="0.08" stroke-width="1"/>';
+    s+=trees(644,90,180,46,40,0.55);
+    s+=trees(660,60,130,38,32,1);
+    svg.innerHTML=s;
+  }
   function buildStars(){
     var box=document.getElementById("fstars"),h="";
     for(var i=0;i<230;i++){
@@ -310,8 +314,7 @@
     document.getElementById("foot").classList.toggle("onfocus", name==="Focus");
     var dots=document.querySelectorAll(".dot");
     for(var j=0;j<dots.length;j++) dots[j].classList.toggle("on", j===cur);
-    if(name==="Focus"){ document.getElementById("fquote").textContent=quotes[qi][0];
-      document.getElementById("fby").textContent=quotes[qi][1]; qi=(qi+1)%quotes.length; }
+    if(name==="Focus"){ showScripture(); }
     if(name==="To-Do") fetchTodos();
   }
   window.showScreen=showScreen;
@@ -337,7 +340,7 @@
   });
 
   document.getElementById("todoList").addEventListener("scroll", updateCue);
-  buildWeek(); buildStars(); tick(); fetchTodos();
+  buildWeek(); buildStars(); buildPond(); showScripture(); tick(); fetchTodos();
   setInterval(tick, 30000);
   setInterval(fetchTodos, 300000);   // refresh the list every 5 min
   resetAuto();
