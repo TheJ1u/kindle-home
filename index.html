@@ -192,20 +192,7 @@
     </svg>
   </section>
 
-  <!-- SCREEN 4: THE YEAR -->
-  <section class="screen" data-name="The Year">
-    <div class="bg"><div class="blob b3"></div></div>
-    <div class="kicker">The Year</div>
-    <hr class="rule">
-    <div class="year-top">
-      <div><div class="n" id="dayNum">—</div><small>Day of 365</small></div>
-      <div style="text-align:center"><div class="n" id="yearPct">—</div><small>Complete</small></div>
-      <div style="text-align:right"><div class="n" id="daysLeft">—</div><small>Days left</small></div>
-    </div>
-    <div class="grid" id="grid"></div>
-  </section>
-
-  <!-- SCREEN 5: THE WEEK -->
+  <!-- SCREEN 4: THE WEEK -->
   <section class="screen" data-name="This Week">
     <div class="bg"><div class="blob b1"></div><div class="blob b2"></div></div>
     <div class="kicker">This Week</div>
@@ -371,7 +358,7 @@
   });
 
   document.getElementById("todoList").addEventListener("scroll", updateCue);
-  buildYear(); buildWeek(); buildStars(); tick(); fetchTodos();
+  buildWeek(); buildStars(); tick(); fetchTodos();
   setInterval(tick, 30000);
   setInterval(fetchTodos, 300000);   // refresh the list every 5 min
   resetAuto();
