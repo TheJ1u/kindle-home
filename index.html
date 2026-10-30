@@ -132,6 +132,7 @@
     display: flex; justify-content: space-between; align-items: center;
     font-size: 14px; letter-spacing: 2px; text-transform: uppercase; }
   .foot.onfocus { color: #fff; }
+  .navarrow { font-size: 30px; font-weight: bold; line-height: 1; opacity: 0.55; }
   .dots { display: flex; gap: 8px; }
   .dot { width: 9px; height: 9px; border: 2px solid currentColor; border-radius: 50%; }
   .dot.on { background: currentColor; }
@@ -217,8 +218,10 @@
   </section>
 
   <div class="foot" id="foot">
+    <span class="navarrow">&#8249;</span>
     <span id="screenName">To-Do</span>
     <div class="dots" id="dots"></div>
+    <span class="navarrow">&#8250;</span>
   </div>
 
 <script>
@@ -354,11 +357,13 @@
   var autoTimer;
   function resetAuto(){ if(autoTimer) clearInterval(autoTimer); autoTimer=setInterval(function(){ showScreen(cur+1); }, 18000); }
 
-  // One tap handler: tapping a task checks it off; tapping anywhere else flips the page.
+  // Tap a task = check it off. Tap the LEFT quarter = go back. Tap elsewhere = go forward.
   document.body.addEventListener("click", function(e){
     var li = findTodoLi(e.target);
     if (li){ toggleTask(li); resetAuto(); return; }   // checking a box never flips the page
-    showScreen(cur+1); resetAuto();
+    var w = window.innerWidth || document.documentElement.clientWidth || 600;
+    if (e.clientX < w * 0.22) showScreen(cur-1); else showScreen(cur+1);
+    resetAuto();
   });
   document.addEventListener("keydown", function(e){
     if(e.key==="ArrowRight"||e.key===" "){ showScreen(cur+1); resetAuto(); }
