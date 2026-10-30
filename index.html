@@ -226,22 +226,35 @@
     });
     ul.innerHTML = html;
   }
+  // XMLHttpRequest (not fetch) — the Kindle's old browser may not support fetch.
   function fetchTodos(){
-    fetch("todo.txt?t="+Date.now()).then(function(r){ return r.text(); })
-      .then(renderTodos)
-      .catch(function(){ document.getElementById("todoList").innerHTML='<li class="td-empty">Could not load todo.txt.</li>'; });
+    try {
+      var x = new XMLHttpRequest();
+      x.open("GET", "todo.txt?t="+Date.now(), true);
+      x.onreadystatechange = function(){
+        if (x.readyState === 4){
+          if (x.status >= 200 && x.status < 300) renderTodos(x.responseText);
+          else document.getElementById("todoList").innerHTML='<li class="td-empty">Could not load todo.txt.</li>';
+        }
+      };
+      x.send();
+    } catch(e){ document.getElementById("todoList").innerHTML='<li class="td-empty">Could not load list.</li>'; }
   }
 
-  // Tap a task to check/uncheck it (saved on this device).
-  document.getElementById("todoList").addEventListener("click", function(e){
-    var li = e.target.closest ? e.target.closest("li.todo") : null;
-    if (!li) return;
-    e.stopPropagation();
+  // Find an enclosing to-do row WITHOUT Element.closest (old Kindle WebKit lacks it).
+  function findTodoLi(node){
+    while (node && node.nodeType === 1 && node !== document.body){
+      if (node.tagName === "LI" && (" "+node.className+" ").indexOf(" todo ") > -1) return node;
+      node = node.parentNode;
+    }
+    return null;
+  }
+  function toggleTask(li){
     var key = li.getAttribute("data-key");
-    var nowDone = !li.classList.contains("done");
-    li.classList.toggle("done", nowDone);
+    var nowDone = (" "+li.className+" ").indexOf(" done ") === -1;
+    li.className = nowDone ? "todo done" : "todo";
     localDone[key] = nowDone; saveLocal(localDone);
-  });
+  }
 
   function dayOfYear(d){ var s=new Date(d.getFullYear(),0,0); return Math.floor((d-s)/86400000); }
   function buildYear(){
@@ -293,17 +306,25 @@
   (function(){ var dd=document.getElementById("dots"),h="";
     for(var i=0;i<screens.length;i++) h+='<div class="dot'+(i===0?' on':'')+'"></div>'; dd.innerHTML=h; })();
 
-  // Tap empty area / arrows flip pages (taps on a task are handled above).
-  document.body.addEventListener("click", function(){ showScreen(cur+1); });
+  // Auto-advance, but reset the timer on any tap so it won't flip while you use it.
+  var autoTimer;
+  function resetAuto(){ if(autoTimer) clearInterval(autoTimer); autoTimer=setInterval(function(){ showScreen(cur+1); }, 18000); }
+
+  // One tap handler: tapping a task checks it off; tapping anywhere else flips the page.
+  document.body.addEventListener("click", function(e){
+    var li = findTodoLi(e.target);
+    if (li){ toggleTask(li); resetAuto(); return; }   // checking a box never flips the page
+    showScreen(cur+1); resetAuto();
+  });
   document.addEventListener("keydown", function(e){
-    if(e.key==="ArrowRight"||e.key===" ") showScreen(cur+1);
-    if(e.key==="ArrowLeft") showScreen(cur-1);
+    if(e.key==="ArrowRight"||e.key===" "){ showScreen(cur+1); resetAuto(); }
+    if(e.key==="ArrowLeft"){ showScreen(cur-1); resetAuto(); }
   });
 
   buildYear(); buildWeek(); buildStars(); tick(); fetchTodos();
   setInterval(tick, 30000);
   setInterval(fetchTodos, 300000);   // refresh the list every 5 min
-  setInterval(function(){ showScreen(cur+1); }, 18000);
+  resetAuto();
 </script>
 </body>
 </html>
